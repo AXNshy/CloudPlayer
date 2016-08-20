@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbackground"
+    android:fitsSystemWindows="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="240dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:hint="@string/userName"
+                android:textColorHint="@color/colorBlue100"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:id="@+id/et_input_username"
+                android:ems="10"
+                android:alpha="0.8"
+                android:background="@drawable/edittext_radius"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <EditText
+                android:hint="@string/password"
+                android:textColorHint="@color/colorBlue100"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:id="@+id/et_input_password"
+                android:ems="10"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/edittext_radius"
+                android:inputType="textPassword"
+                android:alpha="0.8"
+                android:textColor="@color/colorPrimaryDark" />
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/register"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="160dp"
+                android:background="@drawable/custonbutton_login"
+                android:textSize="20dp"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

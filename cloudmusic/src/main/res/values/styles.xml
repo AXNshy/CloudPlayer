@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 状态栏和标题栏颜色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <!--statusBarColor-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- 标题颜色-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- 溢出菜单图标颜色-->
+        <item name="colorControlNormal">@android:color/white</item>
+
+        <!-- 箭头 -->
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!-- 溢出菜单文字颜色-->
+        <item name="textAppearanceLargePopupMenu">@style/OverflowMenuTextAppearance</item>
+        <!-- 菜单项点击selector-->
+        <item name="actionBarItemBackground">@drawable/abc_item_background_holo_dark</item>
+
+        <item name="android:itemTextAppearance">@style/TextAppearance</item>
+    </style>
+
+    <style name="TextAppearance">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <!-- 左边的箭头指示-->
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <!--溢出菜单文字样式-->
+    <style name="OverflowMenuTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/overflowTextColor</item>
+    </style>
+
+    <style name="dialog_anim_slide_left" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/dialog_exit_slide_left</item>
+    </style>
+
+    <style name="dialog" parent="AlertDialog.AppCompat">
+
+    </style>
+    <style name="DarkButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="LightButton">
+        <item name="android:background">@drawable/light_button</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="LightButtonEmphasize">
+        <item name="android:background">@drawable/light_button_dark</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>
+

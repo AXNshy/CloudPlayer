@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dip"
+    android:id="@+id/layout_list_avatar"
+    android:layout_height="200dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/h1">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_alignParentBottom="true"
+    android:background="#707070"
+    android:alpha="0.9">
+<TextView
+    android:id="@+id/tv_musiclist_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/listname"
+    android:layout_margin="4dp"
+    android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/tv_musiclist_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_below="@id/tv_musiclist_name"
+        android:layout_marginLeft="8dp"
+        android:textSize="12dp"
+        android:alpha="0.5"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="首"
+        android:textColor="@color/white"
+        android:layout_below="@id/tv_musiclist_name"
+        android:layout_toRightOf="@+id/tv_musiclist_count"
+        android:layout_marginLeft="4dp"
+        android:textSize="12dp"
+        android:alpha="0.5"/>
+</RelativeLayout>
+</RelativeLayout>

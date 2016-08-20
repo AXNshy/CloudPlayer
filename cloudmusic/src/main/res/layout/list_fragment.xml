@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:background="@color/colorPrimary"
+        android:elevation="2dp">
+
+        <ImageView
+            android:id="@+id/iv_list_avator"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="24dp"
+            android:background="#FFFFFFFF" />
+
+        <View
+            android:layout_width="120dp"
+            android:layout_height="24dp"
+            android:layout_alignLeft="@id/iv_list_avator"
+            android:layout_alignTop="@+id/iv_list_avator"
+            android:background="#f0c0c0c0" />
+
+        <TextView
+            android:id="@+id/tv_list_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/iv_list_avator"
+            android:layout_alignTop="@+id/iv_list_avator"
+            android:layout_marginRight="4dp"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_list_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_list_avator"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/iv_list_avator"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="U'S"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_list_creator_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/tv_list_name"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/iv_list_avator"
+            android:src="@drawable/h1" />
+
+        <TextView
+            android:id="@+id/tv_list_creator_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/iv_list_creator_avatar"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_list_creator_avatar"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="AXN_shy"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/refreshLayout_custom">
+        <ListView
+            android:id="@+id/lv_fragment_musicList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

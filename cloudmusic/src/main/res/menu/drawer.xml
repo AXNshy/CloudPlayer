@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/it_drawer_menu1"
+        android:title="@string/my_message"
+         />
+    <item android:id="@+id/it_drawer_menu2"
+        android:title="@string/it_is_night"
+        />
+    <item android:id="@+id/it_drawer_menu3"
+        android:title="@string/account_info"
+        />
+    <item android:id="@+id/it_drawer_menu4"
+        android:title="@string/my_message"
+        />
+    <item android:id="@+id/it_drawer_menu5"
+        android:title="@string/my_message"
+        />
+    <item android:id="@+id/it_drawer_menu6"
+        android:title="@string/my_message"
+        />
+    <item android:id="@+id/it_drawer_menu7"
+        android:title="@string/my_message"
+        />
+</menu>

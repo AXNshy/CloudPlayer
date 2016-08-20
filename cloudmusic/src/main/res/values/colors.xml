@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#00bcd4</color>-->
+    <color name="colorPrimary">#FF22A4EA</color>
+    <color name="colorPrimaryDark">#006064</color>
+    <color name="colorAccent">#00e5ff</color>
+    <color name="colorCyan100">#B2EBF2</color>
+    <color name="colorBlue100">#BBDEFB</color>
+    <color name="drawer_head">#FFF000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="overflowTextColor">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="colorListItemPressed">#FF22A4EA</color>
+    <color name="colorIndego">#c5cae9</color>
+    <color name="colorGreenA200">#69f0a1</color>
+    <color name="colorDrawerBack">#77d8eb</color>
+    <color name="black">#000000</color>
+    <color name="colorItemMenuIcon">#27ae60</color>
+    <color name="colorCuttingLine">#bdc3c7</color>
+    <color name="colorGreenHost">#FF34AF5F</color>
+    <color name="colorGren200">#EEEEEE</color>
+    <color name="Red500">#F44336</color>
+</resources>

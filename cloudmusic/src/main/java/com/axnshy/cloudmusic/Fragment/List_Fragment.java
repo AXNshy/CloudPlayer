@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -31,14 +30,11 @@ import com.axnshy.cloudmusic.FilesRead.MusicInfo;
 import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
-import com.axnshy.cloudmusic.User;
 
 import org.xutils.view.annotation.ContentView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobUser;
 
 /**
  * Created by axnshy on 16/5/21.
@@ -109,10 +105,6 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
         // bindService
         Intent intent = new Intent(view.getContext(), PlayerService.class);
         view.getContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        if (BmobUser.getCurrentUser(User.class) != null) {
-            listCreatorTx.setText(BmobUser.getCurrentUser(User.class).getNickName());
-            listCreatorAvatarImg.setImageURI(Uri.parse(BmobUser.getCurrentUser(User.class).getAvatar().getFileUrl()));
-        }
         Log.w(PlayerService.LOG_TAG, "Activity bindService");
     }
 

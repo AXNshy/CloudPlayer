@@ -3,8 +3,6 @@ package com.axnshy.cloudmusic.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,11 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.axnshy.cloudmusic.Config;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.User;
-import com.axnshy.cloudmusic.Utils.HttpUtils;
-import com.axnshy.cloudmusic.Utils.JsonUtils;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -33,29 +28,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String username;
     private String password;
     private Context context;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int loginState = msg.arg1;
-            System.out.println("msg.arg1     :     " + msg.arg1);
-            //登录成功
-            if (loginState == 1) {
-                User.setmUser((User) msg.obj);
-                Intent intent = new Intent(LoginActivity.this, Launch.class);
-                Toast.makeText(LoginActivity.this, "登录成功!", Toast.LENGTH_SHORT).show();
-//                MySharedPre.updateCurrentUser(context, User.getmUser().getUsername(), User.getmUser().get);
-                startActivity(intent);
-                finish();
-            }
-            //登录失败
-            if (loginState == 0) {
-                Toast.makeText(LoginActivity.this, "登录失败,用户名或密码错误", Toast.LENGTH_SHORT).show();
-                et_password.setText("");
-            }
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,29 +89,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         }
-    }
-
-    private boolean login(Context context, String username, String password) {
-        final String url = Config.WEB_SERVER_LOGIN + "username=" + username + "&password=" + password;
-        if (HttpUtils.isServerConnection(context)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Message msg = Message.obtain();
-                    String result = HttpUtils.doGet(url);
-                    String loginState = JsonUtils.getLoginInfoFromJson(result);
-                    System.out.println("loginState     :     " + loginState);
-                    if (loginState.equals("successful")) {
-                        msg.arg1 = 1;
-                        msg.obj = JsonUtils.parseJsonToUser_Basic(result);
-                    } else {
-                        msg.arg1 = 0;
-                    }
-                    //发送消息给主线程
-                    handler.sendMessage(msg);
-                }
-            }).start();
-        }
-        return false;
     }
 }

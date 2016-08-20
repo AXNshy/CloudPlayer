@@ -12,13 +12,14 @@ import cn.bmob.v3.datatype.BmobFile;
 public class User extends BmobUser {
 
 
-    private static User mUser;
 
     private String nickName;
 
-    private Integer gender;
+    private int gender;
 
     private BmobFile avatar;
+
+    private int age;
 
     private String qq;
 
@@ -29,13 +30,6 @@ public class User extends BmobUser {
     public User(){
     }
 
-    public static User getmUser() {
-        return mUser;
-    }
-
-    public static void setmUser(User mUser) {
-        User.mUser = mUser;
-    }
 
     public void setAddress(String address) {
         this.address = address;
@@ -88,4 +82,11 @@ public class User extends BmobUser {
         return qq;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
 }

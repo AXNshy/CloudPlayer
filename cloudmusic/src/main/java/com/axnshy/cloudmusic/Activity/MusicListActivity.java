@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -88,6 +87,7 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
 
     List<ListsInfo> ListsList;
     int CurrentListPosition;
+    ListsInfo currentList;
 
     // 定义ServiceConnection
     private ServiceConnection conn = new ServiceConnection() {
@@ -137,8 +137,6 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         ListsList=intent.getParcelableArrayListExtra("ListsList");
         CurrentListPosition=intent.getIntExtra(Config.LIST,-1);
         mContext = this;
-        params = getWindow().getAttributes();
-        window = getWindow();
         initView();
         initEvent();
 //        PlayerBarToken=true;
@@ -245,9 +243,12 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
                 mService.play(mService.getNextMusic());
                 break;
             case R.id.iv_media_play: {
-                if(CurrentListPosition<0){
+                if(mService.getPlayerState()==PlayerService.MediaPlayer_PAUSE&&mService.getMyList()==null){
                     mService.setPlayerList(MusicInfoDao.getAllMusic(this));
                 }
+//                if(CurrentListPosition<0){
+//                    mService.setPlayerList(MusicInfoDao.getAllMusic(this));
+//                }
                 if (mService.getPlayerState() == mService.MediaPlayer_PLAY) {
                     mService.pause();
                     mService.setPlayerState(mService.MediaPlayer_PAUSE);
@@ -295,12 +296,6 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         //topMusicDisplay.setText(string);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu2, menu);
-        return true;
-    }
 
     @Override
     public void update(Observable observable, Object data) {

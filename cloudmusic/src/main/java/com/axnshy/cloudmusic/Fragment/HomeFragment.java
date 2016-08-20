@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.axnshy.cloudmusic.Activity.MusicListActivity;
 import com.axnshy.cloudmusic.Adapter.RecyclerViewAdapter;
@@ -36,12 +35,10 @@ import com.axnshy.cloudmusic.Config;
 import com.axnshy.cloudmusic.DBHelper.ListsInfoDao;
 import com.axnshy.cloudmusic.FilesRead.ListsInfo;
 import com.axnshy.cloudmusic.R;
-import com.yalantis.ucrop.UCrop;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +66,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private AlertDialog dialog;
 
-    private String AvatarPath=null;
+    private String AvatarPath = null;
 
     private ImageView showAvatar;
 
@@ -89,11 +86,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         linearLayout1 = (LinearLayout) view.findViewById(R.id.id_top_home_linearlayout1);
         txtNum1 = (TextView) view.findViewById(R.id.tv_music_count1);
         linearLayout1.setOnClickListener(this);
-        newMusicListTx= (TextView) view.findViewById(R.id.tv_addlist);
+        newMusicListTx = (TextView) view.findViewById(R.id.tv_addlist);
         newMusicListTx.setOnClickListener(this);
         txtNum1.setText(" 个");
         txtNum1.setTextColor(Color.parseColor("#FFFFFF"));
-        mListsList=new ArrayList<>();
+        mListsList = new ArrayList<>();
 
     }
 
@@ -103,7 +100,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         switch (viewID) {
             case R.id.id_top_home_linearlayout1: {
                 Intent intent = new Intent(view.getContext(), MusicListActivity.class);
-                intent.putExtra(Config.LIST,-1);
+                intent.putExtra(Config.LIST, -1);
                 intent.putParcelableArrayListExtra("ListsList", (ArrayList<? extends Parcelable>) mListsList);
                 startActivity(intent);
                 break;
@@ -116,7 +113,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 final EditText inputListName = (EditText) layout.findViewById(R.id.et_input_music_list_name);
                 TextView cancelTx = (TextView) layout.findViewById(R.id.tv_cancel);
                 TextView confirm = (TextView) layout.findViewById(R.id.tv_confirm);
-                final Button addAvatar= (Button) layout.findViewById(R.id.btn_select_background_from_lib);
+                final Button addAvatar = (Button) layout.findViewById(R.id.btn_select_background_from_lib);
                 showAvatar = (ImageView) layout.findViewById(R.id.iv_show_list_avatar);
 
                 cancelTx.setOnClickListener(new View.OnClickListener() {
@@ -131,9 +128,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                ListsInfoDao.getDAO().addMusicList(view.getContext(), inputListName.getText().toString().trim(),AvatarPath);
+                                ListsInfoDao.getDAO().addMusicList(view.getContext(), inputListName.getText().toString().trim(), AvatarPath);
                                 Message msg = Message.obtain();
-                                msg.obj = new ListsInfo(inputListName.getText().toString(), 0,AvatarPath);
+                                msg.obj = new ListsInfo(inputListName.getText().toString(), 0, AvatarPath);
                                 msg.what = 1;
                                 mHandler.sendMessage(msg);
                                 dialog.dismiss();
@@ -189,33 +186,33 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             switch (msg.what) {
                 case 1:
                     mListsList.add((ListsInfo) msg.obj);
-                    mRecyclerAdapter .notifyItemChanged(mListsList.size()-1);
+                    mRecyclerAdapter.notifyItemChanged(mListsList.size() - 1);
                     break;
                 case 0:
-                    if(recyclerView==null) {
-                        mListsList = (List<ListsInfo>) msg.obj;
-//                    mListsList.add(0,new ListsInfo());
-                        getAndroiodScreenProperty();
+                    if (recyclerView == null)
                         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_music_list);
-                        mRecyclerAdapter = new RecyclerViewAdapter(view.getContext(), mListsList, screenWidth, screenHeight);
-                        mRecyclerAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                int _id = mListsList.get(position).getListId();
-                                Intent intent = new Intent(view.getContext(), MusicListActivity.class);
-                                intent.putExtra(Config.LIST, position);
-                                intent.putParcelableArrayListExtra("ListsList", (ArrayList<? extends Parcelable>) mListsList);
-                                startActivity(intent);
-                            }
-                            @Override
-                            public void onItemLongClick(View view, int position) {
+                    mListsList = (List<ListsInfo>) msg.obj;
+//                    mListsList.add(0,new ListsInfo());
+                    getAndroiodScreenProperty();
+                    mRecyclerAdapter = new RecyclerViewAdapter(view.getContext(), mListsList, screenWidth, screenHeight);
+                    mRecyclerAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            int _id = mListsList.get(position).getListId();
+                            Intent intent = new Intent(view.getContext(), MusicListActivity.class);
+                            intent.putExtra(Config.LIST, position);
+                            intent.putParcelableArrayListExtra("ListsList", (ArrayList<? extends Parcelable>) mListsList);
+                            startActivity(intent);
+                        }
 
-                            }
-                        });
-                        recyclerView.setAdapter(mRecyclerAdapter);
-                        GridLayoutManager manager = new GridLayoutManager(view.getContext(), 3);
-                        recyclerView.setLayoutManager(manager);
-                    }
+                        @Override
+                        public void onItemLongClick(View view, int position) {
+
+                        }
+                    });
+                    recyclerView.setAdapter(mRecyclerAdapter);
+                    GridLayoutManager manager = new GridLayoutManager(view.getContext(), 3);
+                    recyclerView.setLayoutManager(manager);
                     break;
                 default:
                     break;
@@ -227,15 +224,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == UCrop.REQUEST_CROP && resultCode == getActivity().RESULT_OK) {
-            final Uri resultUri = UCrop.getOutput(data);
-            AvatarPath=resultUri.toString();
-            Log.e("TAG","AVATAR _Path = "+resultUri);
-            showAvatar.setVisibility(View.VISIBLE);
-            showAvatar.setImageURI(resultUri);
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            Toast.makeText(view.getContext(), UCrop.getError(data).getMessage(), Toast.LENGTH_SHORT).show();
-        }
         if (requestCode == 101 && resultCode == Activity.RESULT_OK && null != data) {
 
             Uri selectedImage = data.getData();
@@ -243,15 +231,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             Cursor c = view.getContext().getContentResolver().query(selectedImage, filePathColumns, null, null, null);
             c.moveToFirst();
             int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String picturePath = "file://"+c.getString(columnIndex);
+            String picturePath = c.getString(columnIndex);
             c.close();
-            Uri destination = Uri.fromFile(new File(view.getContext().getCacheDir(), "cropped"));
-            /*destinationFileName=picturePath+"destination";*/
-            UCrop.of(Uri.parse(picturePath),destination)
-                    .withAspectRatio(1,1)
-                    .withMaxResultSize(view.getWidth()*2/3, view.getHeight()*2/3)
-                    .start(getActivity());
-          //  Crop.of(Uri.parse(picturePath), destination).asSquare().start(getActivity());
+            AvatarPath = picturePath;
+            showAvatar.setImageURI(Uri.parse(AvatarPath));
+//            Uri destination = Uri.fromFile(new File(view.getContext().getCacheDir(), "cropped"));
+//            /*destinationFileName=picturePath+"destination";*/
+//            UCrop.of(Uri.parse(picturePath),destination)
+//                    .withAspectRatio(1,1)
+//                    .withMaxResultSize(view.getWidth()*2/3, view.getHeight()*2/3)
+//                    .start(getActivity());
+//          //  Crop.of(Uri.parse(picturePath), destination).asSquare().start(getActivity());
 
         }
     }

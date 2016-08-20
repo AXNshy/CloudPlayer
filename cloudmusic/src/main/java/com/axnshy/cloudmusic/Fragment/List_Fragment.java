@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -30,13 +31,19 @@ import com.axnshy.cloudmusic.FilesRead.MusicInfo;
 import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
+import com.axnshy.cloudmusic.User;
+
+import org.xutils.view.annotation.ContentView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 /**
  * Created by axnshy on 16/5/21.
  */
+@ContentView(R.layout.list_fragment)
 public class List_Fragment extends BaseFragment implements AdapterView.OnItemClickListener {
     private MusicListActivity activity;
     private View view;
@@ -62,6 +69,8 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
             mService = ((PlayerService.MyBinder) service).getService();
             Log.w(PlayerService.LOG_TAG, "Activity onServiceConnected");
             Log.w("TAG", "Service   -------------------------   " + mService);
+            initView();
+            initList();
 
         }
 
@@ -77,18 +86,11 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.list_fragment, container, false);
-        super.onCreateView( inflater,  container,  savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         listPositon = bundle.getInt(Config.LIST);
         ListsList = bundle.getParcelableArrayList("ListsList");
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initView();
-        initList();
     }
 
     private void initList() {
@@ -103,9 +105,14 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onStart() {
         super.onStart();
+
         // bindService
         Intent intent = new Intent(view.getContext(), PlayerService.class);
         view.getContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        if (BmobUser.getCurrentUser(User.class) != null) {
+            listCreatorTx.setText(BmobUser.getCurrentUser(User.class).getNickName());
+            listCreatorAvatarImg.setImageURI(Uri.parse(BmobUser.getCurrentUser(User.class).getAvatar().getFileUrl()));
+        }
         Log.w(PlayerService.LOG_TAG, "Activity bindService");
     }
 
@@ -119,14 +126,14 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private void initView() {
-        listCountTx= (TextView) view.findViewById(R.id.tv_list_count);
-        listCreatorTx= (TextView) view.findViewById(R.id.tv_list_creator_name);
-        listNameTx= (TextView) view.findViewById(R.id.tv_list_name);
-        listAvatarImg= (ImageView) view.findViewById(R.id.iv_list_avator);
-        listCreatorAvatarImg= (ImageView) view.findViewById(R.id.iv_list_creator_avatar);
+        listCountTx = (TextView) view.findViewById(R.id.tv_list_count);
+        listCreatorTx = (TextView) view.findViewById(R.id.tv_list_creator_name);
+        listNameTx = (TextView) view.findViewById(R.id.tv_list_name);
+        listAvatarImg = (ImageView) view.findViewById(R.id.iv_list_avator);
+        listCreatorAvatarImg = (ImageView) view.findViewById(R.id.iv_list_creator_avatar);
         mListView = (ListView) view.findViewById(R.id.lv_fragment_musicList);
         mListView.setOnItemClickListener(this);
-        refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout_custom);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout_custom);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -134,16 +141,14 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
                 refreshLayout.setRefreshing(false);
             }
         });
-        if(ListsList.get(listPositon).getBackgroundPath()!=null) {
+        if (ListsList.get(listPositon).getBackgroundPath() != null) {
             listAvatarImg.setImageDrawable(Drawable.createFromPath(ListsList.get(listPositon).getBackgroundPath()));
-        }
-        else
-        {
+        } else {
             listAvatarImg.setImageResource(R.drawable.h1);
         }
-        listCountTx.setText(ListsList.get(listPositon).getListCount()+"");
+        listCountTx.setText(ListsList.get(listPositon).getListCount() + "");
         listNameTx.setText(ListsList.get(listPositon).getListName());
-        listCreatorTx.setText(ListsList.get(listPositon).getUserId()+"");
+        listCreatorTx.setText(ListsList.get(listPositon).getUserId() + "");
     }
 
     @Override

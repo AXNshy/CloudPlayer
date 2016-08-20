@@ -19,8 +19,8 @@
 
             <ImageView
                 android:id="@+id/iv_current_musicAlbumCover"
-                android:layout_width="320dp"
-                android:layout_height="320dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="13dp" />
 
@@ -47,74 +47,6 @@
             android:layout_height="152dp"
             android:background="#77000000"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="48dp"
-                android:layout_marginRight="48dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/iv_star"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.8"
-                        android:src="@drawable/unstar" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/iv_download"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.8"
-                        android:src="@drawable/download" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/iv_message"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.8"
-                        android:src="@drawable/message" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/iv_menu"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.8"
-                        android:src="@drawable/menu1" />
-
-                </RelativeLayout>
-            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

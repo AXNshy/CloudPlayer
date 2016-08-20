@@ -24,6 +24,13 @@
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_chevron_left_white_48" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/tv_personInfo_edit"
@@ -80,7 +87,7 @@
                         android:layout_height="56dp"
                         android:layout_gravity="center_vertical"
                         android:gravity="center"
-                        android:text="@string/userName" />
+                        android:text="@string/nickName" />
 
                     <TextView
                         android:id="@+id/tv_personInfo_nickName"

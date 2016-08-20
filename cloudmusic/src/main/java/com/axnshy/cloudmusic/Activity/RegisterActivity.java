@@ -14,7 +14,11 @@ import android.widget.Toast;
 import com.axnshy.cloudmusic.Config;
 import com.axnshy.cloudmusic.MySharedPre;
 import com.axnshy.cloudmusic.R;
+import com.axnshy.cloudmusic.User;
 import com.axnshy.cloudmusic.Utils.HttpUtils;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by axnshy on 16/5/28.
@@ -54,8 +58,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_register: {
                 userName = username.getText().toString();
                 Password = password.getText().toString();
-                registerUser(userName, Password);
-
+//                registerUser(userName, Password);
+                User bu = new User();
+                bu.setUsername("sendi");
+                bu.setPassword("123456");
+                bu.setEmail("sendi@163.com");
+//注意：不能用save方法进行注册
+                bu.signUp(new SaveListener<User>() {
+                    @Override
+                    public void done(User s, BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(RegisterActivity.this, "注册成功:" + s.toString(), Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+//                            loge(e);
+                        }
+                    }
+                });
             }
         }
     }

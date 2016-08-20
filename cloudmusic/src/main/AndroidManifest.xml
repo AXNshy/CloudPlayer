@@ -51,6 +51,10 @@
         <activity android:name=".Activity.AccountManageActivity">
 
         </activity>
+        <!--修改密码-->
+        <activity android:name=".Activity.ChangePassWord">
+
+        </activity>
         <!--uCrop图片剪裁-->
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity

@@ -23,10 +23,12 @@ import cn.bmob.v3.Bmob;
 @ContentView(R.layout.splashview)
 public class SplashActivity extends BaseActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bmob.initialize(this, "ae033918de6540eb7f98aa6054bdc6fe");
+
         Window window = this.getWindow();
 //设置透明状态栏,这样才能让 ContentView 向上
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

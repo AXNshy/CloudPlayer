@@ -204,7 +204,7 @@ public class MusicPlayingActivity extends BaseActivity implements Observer {
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         setSupportActionBar(toolbar);
-        shareImg.setImageResource(R.drawable.ic_share_white_48dp);
+//        shareImg.setImageResource(R.drawable.ic_share_white_48dp);
         returnImg.setImageResource(R.drawable.ic_chevron_left_white_48dp);
     }
 

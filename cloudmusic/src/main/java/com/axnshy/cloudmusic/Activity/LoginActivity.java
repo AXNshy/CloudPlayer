@@ -19,6 +19,9 @@ import com.axnshy.cloudmusic.User;
 import com.axnshy.cloudmusic.Utils.HttpUtils;
 import com.axnshy.cloudmusic.Utils.JsonUtils;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+
 /**
  * Created by axnshy on 16/5/25.
  */
@@ -85,7 +88,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_login: {
                 username = et_username.getText().toString().trim();
                 password = et_password.getText().toString();
-                login(this, username, password);
+//                login(this, username, password);
+                User bu2 = new User();
+                bu2.setUsername(username);
+                bu2.setPassword(password);
+                bu2.login(new SaveListener<User>() {
+
+                    @Override
+                    public void done(User user, BmobException e) {
+                        if(e==null){
+                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK);
+                            finish();
+                            //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
+                            //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
+                        }else{
+//                            loge(e);
+                        }
+                    }
+                });
+
                 break;
             }
             case R.id.tv_register: {

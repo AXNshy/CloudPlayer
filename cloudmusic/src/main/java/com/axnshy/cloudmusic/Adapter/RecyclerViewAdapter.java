@@ -59,10 +59,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.listAvatarLayout.getLayoutParams();
         Log.w("TAG", "screenWidth--------" + screenWidth + "     screenHeight----------" + screenHeight +"    --avatar path"+mListsList.get(position).getBackgroundPath());
         params.width = (screenWidth - 4 * 8) / 3;
-        params.height = (int) (params.width * 1.414);
+        params.height = (screenWidth - 4 * 8) / 3;
         holder.listAvatarLayout.setLayoutParams(params);
-//        holder.listCountTx = (TextView) holder.findViewById(R.id.tv_musiclist_name);
-//        holder.listNameTx = (TextView) itemView.findViewById(R.id.tv_musiclist_count);
         holder.listNameTx.setText(mListsList.get(position).getListName());
         holder.listCountTx.setText(mListsList.get(position).getListCount() + "");
         if(mListsList.get(position).getBackgroundPath()!=null) {

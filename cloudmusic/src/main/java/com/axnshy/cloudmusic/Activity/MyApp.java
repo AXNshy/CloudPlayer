@@ -12,6 +12,8 @@ import org.xutils.x;
  * Created by axnshy on 16/8/5.
  */
 public class MyApp extends Application {
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,7 +21,7 @@ public class MyApp extends Application {
         x.Ext.setDebug(BuildConfig.DEBUG);
 
 
-        if (MySharedPre.getOpenFlag(this)==0) {
+        if (MySharedPre.getOpenFlag(this) == 0) {
             scanLocal();
             MySharedPre.setOpenFLAG(this);
         }

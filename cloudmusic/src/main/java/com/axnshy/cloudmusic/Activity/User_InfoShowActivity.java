@@ -1,8 +1,5 @@
 package com.axnshy.cloudmusic.Activity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,13 +11,14 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
+import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by axnshy on 16/8/5.
  */
 @ContentView(R.layout.personinfo)
-public class User_InfoShowActivity extends BaseActivity{
+public class User_InfoShowActivity extends BaseActivity {
 
     @ViewInject(R.id.iv_setAvatar)
     private CircleImageView avatar;
@@ -44,37 +42,47 @@ public class User_InfoShowActivity extends BaseActivity{
     private TextView qqTx;
     @ViewInject(R.id.tv_personInfo_telephone)
     private TextView telephoneTx;
+    @ViewInject(R.id.tv_title)
+    private TextView titleTx;
 
-    @Event(value={R.id.iv_setAvatar, R.id.tv_personInfo_edit,R.id.iv_userInfo_return})
-    private  void initOnClickListener(View v) {
+    @Event(value = {R.id.iv_setAvatar, R.id.tv_personInfo_edit, R.id.iv_userInfo_return})
+    private void initOnClickListener(View v) {
         switch (v.getId()) {
             case R.id.iv_userInfo_return:
                 onBackPressed();
                 break;
             case R.id.tv_personInfo_edit:
-                Intent intent = new Intent();
                 break;
         }
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        updateUI();
+    protected void onStart() {
+        super.onStart();
+        //updateUI();
+        titleTx.setText("個人情報");
     }
 
     private void updateUI() {
-        if (User.getmUser() != null) {
-            nickNameTx.setText(User.getmUser().getNickName());
-            genderTx.setText(User.getmUser().getGender()+"");
-            ageTx.setText("22");
-            birthdayTx.setText(User.getmUser().getBirthday()+"");
-            addressTx.setText(User.getmUser().getAddress());
-            emailTx.setText(User.getmUser().getEmail());
-            qqTx.setText(User.getmUser().getQq());
+        User user = BmobUser.getCurrentUser(User.class);
+        if (user != null) {
+            nickNameTx.setText(user.getNickName());
+            int gender = user.getGender();
+            if (gender == 0) {
+                genderTx.setText("女");
+            }
+            if (gender == 1) {
+                genderTx.setText("男");
+            }
+//            Log.e("TAG_AVATAR","    avatar ur  :  "+user.getAvatar().getFileUrl());
+//            avatar.setImageURI(Uri.parse(user.getAvatar().getFileUrl()));
+            ageTx.setText(user.getAge());
+            addressTx.setText(user.getAddress());
+            emailTx.setText(user.getEmail());
+            qqTx.setText(user.getQq());
+            telephoneTx.setText(user.getMobilePhoneNumber());
         }
+
     }
-
-
-
 }
+

@@ -34,7 +34,6 @@ import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
 import com.axnshy.cloudmusic.User;
-import com.soundcloud.android.crop.Crop;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -50,6 +49,7 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
     private DrawerLayout mDrawerLayout;
     private Fragment home;
     private Fragment drawerHeader;
+    @ViewInject(R.id.toolbar_top)
     private Toolbar mToolbar;
     private ImageView repeatImg;
     private ImageView previousImg;
@@ -66,6 +66,8 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
     @ViewInject(R.id.lv_drawer_menu)
     private ListView drawMenu;
 
+
+    private FragmentManager fragmentManager;
     //绑定service与activity
 
     //绑定service与activity
@@ -101,6 +103,17 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
         // updateUI();
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (BmobUser.getCurrentUser(User.class) != null) {
+            drawerHeader = new DrawerHeaderSignIn();
+        } else
+            drawerHeader = new DrawerHeaderSignOut();
+        fragmentManager.beginTransaction().replace(R.id.frame_drawer_header, drawerHeader).commit();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -113,6 +126,7 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initView();
         initEvent();
         launchService();
@@ -134,13 +148,8 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
         toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         home = new Home_Fragment();
-        if (BmobUser.getCurrentUser(User.class) != null) {
-            drawerHeader = new DrawerHeaderSignIn();
-        } else
-            drawerHeader = new DrawerHeaderSignOut();
-        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.id_home_container, home).commit();
-        fragmentManager.beginTransaction().replace(R.id.frame_drawer_header, drawerHeader).commit();
         setUpDrawer();
     }
 
@@ -171,7 +180,7 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
         switch (item.getItemId()) {
             case R.id.it_menu_scan: {
                 MusicInfoDao.getAllMusic(this);
-                Crop.pickImage(this);
+//                Crop.pickImage(this);
                 break;
             }
         }

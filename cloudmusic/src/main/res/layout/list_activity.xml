@@ -1,57 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
-    <LinearLayout
-        android:id="@+id/layout_list_activity"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:fitsSystemWindows="true"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_music_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_list_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_left_white_48" />
+
+                    <TextView
+                        android:id="@+id/tv_toolbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/iv_back"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+
+            <!--<ImageView
+                android:id="@+id/iv_collapsingImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="200dp"
+                android:minHeight="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/anime"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed" />-->
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_list_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/colorPrimary">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <ImageView
-                    android:id="@+id/iv_back"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_chevron_left_white_48" />
-
-                <TextView
-                    android:id="@+id/tv_toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/iv_back"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
-
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <FrameLayout
-            android:id="@+id/FL_list_fragment"
+            android:id="@+id/frame_list_fragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.NestedScrollView>
 
-        </FrameLayout>
-
-        <include layout="@layout/media_service" />
-    </LinearLayout>
+    <include layout="@layout/media_service" />
 </android.support.design.widget.CoordinatorLayout>

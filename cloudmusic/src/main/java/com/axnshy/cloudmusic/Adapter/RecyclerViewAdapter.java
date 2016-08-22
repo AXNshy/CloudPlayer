@@ -32,6 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         void onItemLongClick(View view, int position);
     }
 
+
     private OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener listener) {

@@ -30,7 +30,6 @@ public class User extends BmobUser {
     public User(){
     }
 
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -47,16 +46,13 @@ public class User extends BmobUser {
         this.birthday = birthday;
     }
 
-
     public void setGender(int gender) {
         this.gender = gender;
     }
 
-
     public void setQq(String qq) {
         this.qq = qq;
     }
-
 
     public Date getBirthday() {
         return birthday;

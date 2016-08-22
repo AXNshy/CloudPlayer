@@ -1,7 +1,6 @@
 package com.axnshy.cloudmusic.Fragment;
 
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -50,13 +49,13 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     private List<ListsInfo> ListsList;
     private int listPositon;
     private SwipeRefreshLayout refreshLayout;
-    OnItemClickListener mListener;
     TextView listCountTx;
     TextView listNameTx;
     TextView listCreatorTx;
     ImageView listAvatarImg;
     ImageView listCreatorAvatarImg;
 
+    int curMusicposition;
     // 定义ServiceConnection
     private ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -82,7 +81,6 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.list_fragment, container, false);
-        super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         listPositon = bundle.getInt(Config.LIST);
         ListsList = bundle.getParcelableArrayList("ListsList");
@@ -93,7 +91,7 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
         // mList=new ArrayList<>();
         Log.e("TAG", "Service   --------------------------    " + mService);
         mList = MusicInfoDao.getMusicList(view.getContext(), ListsList.get(listPositon).getListId());
-        mAdapter = new MyAdapter(view.getContext(), activity, mList);
+        mAdapter = new MyAdapter(view.getContext(), mList);
         System.out.println("mAdapter" + mAdapter);
         mListView.setAdapter(mAdapter);
     }
@@ -151,25 +149,17 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
             view.getContext().startService(serviceintent);
             Log.e("TAGS", "MediaPlayerService does not existed");
         }
+//        mService.setPlayerList(mList);
+//        mService.play(mList.get(position));
         mService.setPlayerList(mList);
         mService.play(mList.get(position));
+        mAdapter.setIsPlaying(position);
+        mAdapter.notifyDataSetChanged();
+//        setPlayIndicator(position);
         //mListener.updateToolbar(mService.getMyList().get(position).musicName);
         Intent intent = new Intent(view.getContext(), MusicPlayingActivity.class);
         startActivity(intent);
     }
 
-    /*
-    * 接口回调,在父Activity中实现该方法,在fragment中想要回调的地方调用mLister的方法
-    * */
-    public interface OnItemClickListener {
-        public void updateToolbar(String string);
-    }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (mListener == null)
-            mListener = (OnItemClickListener) activity;
-        this.activity = (MusicListActivity) activity;
-    }
 }

@@ -1,5 +1,6 @@
 package com.axnshy.cloudmusic.Activity;
 
+import android.app.Service;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,10 @@ import cn.bmob.v3.listener.UpdateListener;
  */
 @ContentView(R.layout.change_pwd)
 public class ChangePassWord extends BaseActivity {
+
+
+
+    private Service mService;
     @ViewInject(R.id.tv_oldPwd)
     private EditText oldPwd;
     @ViewInject(R.id.tv_newPwd)

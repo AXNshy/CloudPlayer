@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.axnshy.cloudmusic.Activity.MusicListActivity;
 import com.axnshy.cloudmusic.Adapter.RecyclerViewAdapter;
@@ -106,6 +107,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             }
             case R.id.tv_addlist:
+
                 final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.dialog_add_music_list, null);
                 builder.setView(layout);
@@ -133,7 +135,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 msg.obj = new ListsInfo(inputListName.getText().toString(), 0, AvatarPath);
                                 msg.what = 1;
                                 mHandler.sendMessage(msg);
-                                dialog.dismiss();
                             }
                         }).start();
                     }
@@ -178,13 +179,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         Log.e("TAG", screenWidth + "======" + screenHeight);
     }
 
-
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Toast.makeText(getActivity(), "这是一个Toast", Toast.LENGTH_SHORT).show();
             switch (msg.what) {
                 case 1:
+                    dialog.dismiss();
                     mListsList.add((ListsInfo) msg.obj);
                     mRecyclerAdapter.notifyItemChanged(mListsList.size() - 1);
                     break;
@@ -201,17 +203,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             int _id = mListsList.get(position).getListId();
                             Intent intent = new Intent(view.getContext(), MusicListActivity.class);
                             intent.putExtra(Config.LIST, position);
+                            Log.w("TAG","this is a short click");
                             intent.putParcelableArrayListExtra("ListsList", (ArrayList<? extends Parcelable>) mListsList);
                             startActivity(intent);
                         }
-
                         @Override
                         public void onItemLongClick(View view, int position) {
-
+                            Log.w("TAG","this is a long click");
+                            Toast.makeText(HomeFragment.this.getActivity(), "this is  a  toast", Toast.LENGTH_LONG).show();
+                            Log.w("TAG","this is a long click after toast");
                         }
                     });
                     recyclerView.setAdapter(mRecyclerAdapter);
-                    GridLayoutManager manager = new GridLayoutManager(view.getContext(), 3);
+                    GridLayoutManager manager = new GridLayoutManager(HomeFragment.this.getActivity(), 3);
                     recyclerView.setLayoutManager(manager);
                     break;
                 default:

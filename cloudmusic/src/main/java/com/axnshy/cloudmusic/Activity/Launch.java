@@ -29,7 +29,6 @@ import com.axnshy.cloudmusic.DBHelper.MusicInfoDao;
 import com.axnshy.cloudmusic.Fragment.DrawerHeaderSignIn;
 import com.axnshy.cloudmusic.Fragment.DrawerHeaderSignOut;
 import com.axnshy.cloudmusic.Fragment.Home_Fragment;
-import com.axnshy.cloudmusic.Fragment.List_Fragment;
 import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
@@ -44,7 +43,7 @@ import java.util.Observer;
 import cn.bmob.v3.BmobUser;
 
 @ContentView(R.layout.activity_launch)
-public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListener, List_Fragment.OnItemClickListener, Observer, View.OnClickListener, AdapterView.OnItemClickListener {
+public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListener, Observer, View.OnClickListener, AdapterView.OnItemClickListener {
     private ActionBarDrawerToggle toggle;
     private DrawerLayout mDrawerLayout;
     private Fragment home;
@@ -203,11 +202,6 @@ public class Launch extends BaseActivity implements Toolbar.OnMenuItemClickListe
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void updateToolbar(String string) {
-
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.axnshy.cloudmusic.DBHelper.MusicInfoDao;
 import com.axnshy.cloudmusic.MySharedPre;
+import com.axnshy.cloudmusic.User;
 
 import org.xutils.BuildConfig;
 import org.xutils.x;
@@ -13,6 +14,7 @@ import org.xutils.x;
  */
 public class MyApp extends Application {
 
+    public User mUser;
 
     @Override
     public void onCreate() {

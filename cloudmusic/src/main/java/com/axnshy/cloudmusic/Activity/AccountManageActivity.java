@@ -38,7 +38,8 @@ public class AccountManageActivity extends BaseActivity {
     private TextView changePwd;
     @ViewInject(R.id.tv_sign_out)
     private TextView signOut;
-
+@ViewInject(R.id.tv_username)
+    private TextView usernameTx;
     private final int[] ids = {R.id.iv_back, R.id.tv_basicInfo, R.id.tv_changePwd, R.id.tv_sign_out};
 
     @Override
@@ -83,6 +84,7 @@ public class AccountManageActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         returnImg.setImageResource(R.drawable.ic_chevron_left_white_48);
         toolbarTitle.setText(R.string.account_manage);
+        usernameTx.setText((BmobUser.getCurrentUser(User.class)!=null)?BmobUser.getCurrentUser(User.class).getUsername():null);
 
     }
 }

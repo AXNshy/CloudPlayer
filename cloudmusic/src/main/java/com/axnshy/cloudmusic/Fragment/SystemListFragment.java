@@ -1,8 +1,6 @@
 package com.axnshy.cloudmusic.Fragment;
 
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.axnshy.cloudmusic.Activity.MusicListActivity;
-import com.axnshy.cloudmusic.Activity.MusicPlayingActivity;
 import com.axnshy.cloudmusic.Adapter.MyAdapter;
 import com.axnshy.cloudmusic.DBHelper.MusicInfoDao;
 import com.axnshy.cloudmusic.FilesRead.ListsInfo;
@@ -30,24 +27,29 @@ import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by axnshy on 16/8/12.
  */
-public class SystemListFragment extends Fragment implements AdapterView.OnItemClickListener {
+@ContentView(R.layout.custom_list_fragment)
+public class SystemListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     private MusicListActivity activity;
     private View view;
     private ArrayList<MusicInfo> mList;
     private MyAdapter mAdapter;
+    @ViewInject(R.id.lv_fragment_musicList)
     private ListView mListView;
     private PlayerService mService;
     private List<ListsInfo> ListsList;
     private int listId;
-    OnItemClickListener mListener;
-
-    private SwipeRefreshLayout refreshLayout;
+    int curMusicposition;
+//    @ViewInject(R.id.refreshLayout_local)
+//    private SwipeRefreshLayout refreshLayout;
 
     Handler handler = new Handler() {
         @Override
@@ -56,14 +58,14 @@ public class SystemListFragment extends Fragment implements AdapterView.OnItemCl
             switch (msg.what) {
                 case 0:
                     mList = (ArrayList<MusicInfo>) msg.obj;
-                    mAdapter = new MyAdapter(view.getContext(), activity, mList);
+                    Log.w("TAG", "List   --------------------    " + (mList.size()));
+                    mAdapter = new MyAdapter(getActivity(), mList);
                     System.out.println("mAdapter" + mAdapter);
                     mListView.setAdapter(mAdapter);
                     break;
             }
         }
     };
-
 
     // 定义ServiceConnection
     private ServiceConnection conn = new ServiceConnection() {
@@ -87,19 +89,12 @@ public class SystemListFragment extends Fragment implements AdapterView.OnItemCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.custom_list_fragment, container, false);
-        super.onCreateView(inflater, container, savedInstanceState);
+//        view = inflater.inflate(R.layout.custom_list_fragment, container, false);
         Bundle bundle = getArguments();
         ListsList = bundle.getParcelableArrayList("ListsList");
         initView();
         initList();
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     private void initList() {
@@ -120,8 +115,8 @@ public class SystemListFragment extends Fragment implements AdapterView.OnItemCl
     public void onStart() {
         super.onStart();
         // bindService
-        Intent intent = new Intent(view.getContext(), PlayerService.class);
-        view.getContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(getActivity(), PlayerService.class);
+        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         Log.w(PlayerService.LOG_TAG, "Activity bindService");
     }
 
@@ -135,15 +130,15 @@ public class SystemListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void initView() {
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout_local);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout_local);
+        /*refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mAdapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
             }
-        });
-        mListView = (ListView) view.findViewById(R.id.lv_fragment_musicList);
+        });*/
+        mListView = (ListView) ((CoordinatorLayout)getActivity().findViewById(R.id.layout_coordinator)).findViewById(R.id.lv_fragment_musicList);
         mListView.setOnItemClickListener(this);
 
     }
@@ -158,24 +153,13 @@ public class SystemListFragment extends Fragment implements AdapterView.OnItemCl
         }
         mService.setPlayerList(mList);
         mService.play(mList.get(position));
-        //mListener.updateToolbar(mService.getMyList().get(position).musicName);
+        mAdapter.setIsPlaying(position);
+        mAdapter.notifyDataSetChanged();
+//        setPlayIndicator(position);
+        //设置播放Flag
+
+        /*//mListener.updateToolbar(mService.getMyList().get(position).musicName);
         Intent intent = new Intent(view.getContext(), MusicPlayingActivity.class);
-        startActivity(intent);
-    }
-
-
-    /*
-    * 接口回调,在父Activity中实现该方法,在fragment中想要回调的地方调用mLister的方法
-    * */
-    public interface OnItemClickListener {
-        public void updateToolbar(String string);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (mListener == null)
-            mListener = (OnItemClickListener) activity;
-        this.activity = (MusicListActivity) activity;
+        startActivity(intent);*/
     }
 }

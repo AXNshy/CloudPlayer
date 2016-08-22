@@ -9,14 +9,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +39,9 @@ import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -48,10 +50,11 @@ import java.util.Observer;
 /**
  * Created by axnshy on 16/5/20.
  */
-public class MusicListActivity extends AppCompatActivity implements View.OnClickListener, List_Fragment.OnItemClickListener,SystemListFragment.OnItemClickListener, Observer, MyAdapter.OnItemMenuClickListener {
+@ContentView(R.layout.list_activity)
+public class MusicListActivity extends BaseActivity implements View.OnClickListener, Observer, MyAdapter.OnItemMenuClickListener {
 
 
-    private LinearLayout musicListLayout;
+//    private LinearLayout musicListLayout;
     private ImageView repeatImg;
     private ImageView previousImg;
     private ImageView playImg;
@@ -61,7 +64,14 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
     private Toolbar toolbar;
     private ImageView returnImg;
     private TextView listTitle;
+    @ViewInject(R.id.layout_coordinator)
     private CoordinatorLayout coordinator;
+    @ViewInject(R.id.collapsing_toolbar_music_list)
+    private CollapsingToolbarLayout collapsingToolbar;
+//    @ViewInject(R.id.iv_collapsingImage)
+    private ImageView collapsingImage;
+    @ViewInject(R.id.nested_scroll_view)
+    private NestedScrollView bottomPlayerController;
     private TextView musicNameTx;
     private TextView commentCount;
     private TextView singerName;
@@ -81,7 +91,7 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
     WindowManager.LayoutParams params;
     Window window;
 
-//    private boolean PlayerBarToken;
+    //    private boolean PlayerBarToken;
     //绑定service与activity
     private PlayerService mService;
 
@@ -117,7 +127,6 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         Log.w(PlayerService.LOG_TAG, "Activity bindService");
         // updateUI();
     }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -133,9 +142,9 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
-        Intent intent=getIntent();
-        ListsList=intent.getParcelableArrayListExtra("ListsList");
-        CurrentListPosition=intent.getIntExtra(Config.LIST,-1);
+        Intent intent = getIntent();
+        ListsList = intent.getParcelableArrayListExtra("ListsList");
+        CurrentListPosition = intent.getIntExtra(Config.LIST, -1);
         mContext = this;
         initView();
         initEvent();
@@ -146,7 +155,7 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
     @TargetApi(Build.VERSION_CODES.M)
     private void initView() {
         coordinator = (CoordinatorLayout) findViewById(R.id.layout_coordinator);
-        musicListLayout = (LinearLayout) coordinator.findViewById(R.id.layout_list_activity);
+//        musicListLayout = (LinearLayout) coordinator.findViewById(R.id.layout_list_activity);
         returnImg = (ImageView) coordinator.findViewById(R.id.iv_back);
         repeatImg = (ImageView) coordinator.findViewById(R.id.iv_media_repeat);
         previousImg = (ImageView) coordinator.findViewById(R.id.iv_media_previous);
@@ -155,18 +164,18 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         shuffleImg = (ImageView) coordinator.findViewById(R.id.iv_media_shuffle);
         toolbar = (Toolbar) coordinator.findViewById(R.id.toolbar_list_fragment);
         listTitle = (TextView) coordinator.findViewById(R.id.tv_toolbar_title);
-        playerBarLayout= (LinearLayout) findViewById(R.id.music_playerBarInApp);
+        playerBarLayout = (LinearLayout) findViewById(R.id.music_playerBarInApp);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         setSupportActionBar(toolbar);
 
-        musicListLayout.setVisibility(View.VISIBLE);
+//        musicListLayout.setVisibility(View.VISIBLE);
         Log.w("TAG", "musicname-----------" + musicNameTx + "comment------------ " + commentCount);
-        if(CurrentListPosition>-1) {
+        if (CurrentListPosition > -1) {
             List_Fragment fragment = new List_Fragment();
 
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.FL_list_fragment
+            fragmentManager.beginTransaction().replace(R.id.frame_list_fragment
                     , fragment).commit();
             Bundle bundle = new Bundle();
             if (CurrentListPosition >= 0) {
@@ -176,12 +185,11 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
             bundle.putParcelableArrayList("ListsList", (ArrayList<? extends Parcelable>) ListsList);
             bundle.putInt(Config.LIST, CurrentListPosition);
             fragment.setArguments(bundle);
-        }
-        else {
+        } else {
             SystemListFragment fragment = new SystemListFragment();
 
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.FL_list_fragment
+            fragmentManager.beginTransaction().replace(R.id.frame_list_fragment
                     , fragment).commit();
             Bundle bundle = new Bundle();
             if (CurrentListPosition >= 0) {
@@ -243,13 +251,14 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
                 mService.play(mService.getNextMusic());
                 break;
             case R.id.iv_media_play: {
-                if(mService.getPlayerState()==PlayerService.MediaPlayer_PAUSE&&mService.getMyList()==null){
+                if (mService.getPlayerState() == PlayerService.MediaPlayer_PAUSE && mService.getMyList() == null) {
                     mService.setPlayerList(MusicInfoDao.getAllMusic(this));
                 }
 //                if(CurrentListPosition<0){
 //                    mService.setPlayerList(MusicInfoDao.getAllMusic(this));
 //                }
                 if (mService.getPlayerState() == mService.MediaPlayer_PLAY) {
+                    mService.pause();
                     mService.pause();
                     mService.setPlayerState(mService.MediaPlayer_PAUSE);
                 } else {
@@ -285,15 +294,6 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
 
             }
         }
-       /* if(PlayerBarToken==true&&PlayerService.PlayerState!=PlayerService.MediaPlayer_PLAY){
-            ObjectAnimator.ofFloat(playerBarLayout,"translationY",0F,180F).setDuration(0).start();
-            PlayerBarToken=false;
-        }*/
-    }
-
-    @Override
-    public void updateToolbar(String string) {
-        //topMusicDisplay.setText(string);
     }
 
 
@@ -301,6 +301,7 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
     public void update(Observable observable, Object data) {
         updateUI();
     }
+
     @Override
     public void showItemMenu(final MusicInfo music) {
         bottomSheetDialog = new BottomSheetDialog(this);
@@ -325,16 +326,18 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(CurrentListPosition<0){
+                if (CurrentListPosition < 0) {
                     //从SQLite数据库中删除该音乐
-                    int id=music.get_id();
-                    ListsInfoDao.getDAO().deleteMusic(mContext,id);
+                    int id = music.get_id();
+                    ListsInfoDao.getDAO().deleteMusic(mContext, id);
+                    bottomSheetDialog.dismiss();
                 }
-                if(CurrentListPosition>=0){
+                if (CurrentListPosition >= 0) {
                     //仅从该表中移除
-                    int id=ListsList.get(CurrentListPosition).getListId();
-                    int musicid=music.get_id();
-                    ListsInfoDao.getDAO().removeMusic(mContext,musicid,id);
+                    int id = ListsList.get(CurrentListPosition).getListId();
+                    int musicid = music.get_id();
+                    ListsInfoDao.getDAO().removeMusic(mContext, musicid, id);
+                    bottomSheetDialog.dismiss();
                 }
             }
         });
@@ -351,13 +354,6 @@ public class MusicListActivity extends AppCompatActivity implements View.OnClick
         Log.w("TAG", "it's a interface callback in MyAdapter");
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 0:
-            }
-        }
-    };
+
+
 }

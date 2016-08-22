@@ -78,7 +78,8 @@ public class ListsInfoDao {
 
     public boolean removeMusic(Context context,int musicid,int listid){
         SQLiteDatabase db =DatabaseHelper.getHelper(context).getWritableDatabase();
-        db.execSQL("delete from "+DatabaseHelper.TABLE_MUSIC_LIST_RELATIONSHIP+" where musicId= "+musicid+" and listId = "+listid);
+        db.execSQL("delete from " + DatabaseHelper.TABLE_MUSIC_LIST_RELATIONSHIP + " where musicId= " + musicid + " and listId = " + listid);
+        db.execSQL("update "+DatabaseHelper.TABLE_MUSIC_LIST_RELATIONSHIP+" set listLength = listLength-1 where listId = "+listid);
         db.close();
         return true;
     }

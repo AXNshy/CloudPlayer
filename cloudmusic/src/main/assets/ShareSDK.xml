@@ -2,7 +2,6 @@
 <DevInfor>
     <!--
     	说明：
-    	
     	1、表格中的第一项
     		<ShareSDK 
         		AppKey="api20" />

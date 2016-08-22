@@ -3,13 +3,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_gravity="end"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/music_playerBarInApp"
     android:orientation="horizontal"
-    android:elevation="1dp"
-    android:layout_alignParentBottom="true"
     android:background="@color/colorPrimary"
-    >
+    android:layout_gravity="bottom"
+    android:layout_alignParentBottom="true"
+    tools:showIn="@layout/list_activity">
 
     <RelativeLayout
         android:layout_width="0dp"

@@ -1,11 +1,16 @@
 package com.axnshy.cloudmusic;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,7 +29,7 @@ import java.util.Observer;
 /**
  * Created by axnshy on 16/4/19.
  */
-public class PlayerService extends Service implements Config, MediaPlayer.OnPreparedListener {
+public class PlayerService extends Service implements Config, MediaPlayer.OnPreparedListener{
 
 
     private MyObservable mObservable;
@@ -112,7 +117,22 @@ public class PlayerService extends Service implements Config, MediaPlayer.OnPrep
         public void onCreate() {
             super.onCreate();
             mObservable = new MyObservable();
+            //Notification
+            Notification.Builder builder = new Notification.Builder(this);
+            Intent intent =new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.bilibili.com"));
+            PendingIntent pendingIntent=PendingIntent.getActivities(this,0, new Intent[]{intent},0);
+            builder.setSmallIcon(R.drawable.amiriya);
+            builder.setContentIntent(pendingIntent);
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.amiriya));
+            builder.setContentTitle("ALZI");
+            builder.setContentText("AGAIN");
+            builder.setSubText("it is basic");
+            //通过NotificationManager来发出Notification
+            NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(0,builder.build());
         }
+
+
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
@@ -186,7 +206,6 @@ public class PlayerService extends Service implements Config, MediaPlayer.OnPrep
 
         public void play(MusicInfo music) {
             getPlayerInstance();
-            getPlayerState();
             try {
                 mPlayer.reset();
                 mPlayer.setDataSource(music.data);
@@ -194,10 +213,15 @@ public class PlayerService extends Service implements Config, MediaPlayer.OnPrep
                 mPlayer.start();
                 currentMusic = music;
                 PlayerState = MediaPlayer_PLAY;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+    public void sendNotification(){
+
+    }
 
         public void pause() {
             getPlayerInstance().pause();

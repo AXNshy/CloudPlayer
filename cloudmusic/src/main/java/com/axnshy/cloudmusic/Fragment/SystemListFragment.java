@@ -139,7 +139,7 @@ public class SystemListFragment extends BaseFragment implements AdapterView.OnIt
             }
         });*/
         mListView = (ListView) ((CoordinatorLayout)getActivity().findViewById(R.id.layout_coordinator)).findViewById(R.id.lv_fragment_musicList);
-        mListView.setOnItemClickListener(this);
+
 
     }
 

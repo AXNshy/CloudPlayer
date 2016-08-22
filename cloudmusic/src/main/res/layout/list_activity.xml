@@ -59,7 +59,7 @@
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 
-            <!--<ImageView
+            <ImageView
                 android:id="@+id/iv_collapsingImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,20 +68,16 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/anime"
                 app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed" />-->
+                app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <ListView
+        android:id="@+id/lv_music_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <FrameLayout
-            android:id="@+id/frame_list_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.NestedScrollView>
+    </ListView>
 
     <include layout="@layout/media_service" />
 </android.support.design.widget.CoordinatorLayout>

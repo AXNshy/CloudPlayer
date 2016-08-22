@@ -105,7 +105,7 @@ public class MusicInfoDao implements Config {
     /*
     * 根据列表ID获取列表实例
     * */
-    public static ArrayList<MusicInfo> getMusicList(Context context, int listId) {
+    public ArrayList<MusicInfo> getMusicList(Context context, int listId) {
         if (listId >= 0) {
             ArrayList<MusicInfo> list = new ArrayList<>();
             SQLiteDatabase sqLiteDatabase = DatabaseHelper.getHelper(context).getWritableDatabase();

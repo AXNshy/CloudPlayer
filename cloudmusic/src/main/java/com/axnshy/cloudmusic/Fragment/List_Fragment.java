@@ -23,7 +23,6 @@ import com.axnshy.cloudmusic.Activity.MusicListActivity;
 import com.axnshy.cloudmusic.Activity.MusicPlayingActivity;
 import com.axnshy.cloudmusic.Adapter.MyAdapter;
 import com.axnshy.cloudmusic.Config;
-import com.axnshy.cloudmusic.DBHelper.MusicInfoDao;
 import com.axnshy.cloudmusic.FilesRead.ListsInfo;
 import com.axnshy.cloudmusic.FilesRead.MusicInfo;
 import com.axnshy.cloudmusic.PlayerService;
@@ -90,7 +89,7 @@ public class List_Fragment extends BaseFragment implements AdapterView.OnItemCli
     private void initList() {
         // mList=new ArrayList<>();
         Log.e("TAG", "Service   --------------------------    " + mService);
-        mList = MusicInfoDao.getMusicList(view.getContext(), ListsList.get(listPositon).getListId());
+//        mList = MusicInfoDao.getMusicList(view.getContext(), ListsList.get(listPositon).getListId());
         mAdapter = new MyAdapter(view.getContext(), mList);
         System.out.println("mAdapter" + mAdapter);
         mListView.setAdapter(mAdapter);

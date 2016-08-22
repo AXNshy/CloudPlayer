@@ -2,7 +2,6 @@ package com.axnshy.cloudmusic.Activity;
 
 
 import android.annotation.TargetApi;
-import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,20 +9,20 @@ import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.axnshy.cloudmusic.Adapter.MyAdapter;
@@ -33,8 +32,6 @@ import com.axnshy.cloudmusic.DBHelper.MusicInfoDao;
 import com.axnshy.cloudmusic.Dialog.CollectDialog;
 import com.axnshy.cloudmusic.FilesRead.ListsInfo;
 import com.axnshy.cloudmusic.FilesRead.MusicInfo;
-import com.axnshy.cloudmusic.Fragment.List_Fragment;
-import com.axnshy.cloudmusic.Fragment.SystemListFragment;
 import com.axnshy.cloudmusic.PlayerService;
 import com.axnshy.cloudmusic.R;
 import com.axnshy.cloudmusic.Service.Service;
@@ -44,17 +41,22 @@ import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 
 /**
  * Created by axnshy on 16/5/20.
  */
 @ContentView(R.layout.list_activity)
-public class MusicListActivity extends BaseActivity implements View.OnClickListener, Observer, MyAdapter.OnItemMenuClickListener {
+public class MusicListActivity extends BaseActivity implements View.OnClickListener, java.util.Observer, MyAdapter.OnItemMenuClickListener, AdapterView.OnItemClickListener {
 
 
-//    private LinearLayout musicListLayout;
+    //    private LinearLayout musicListLayout;
     private ImageView repeatImg;
     private ImageView previousImg;
     private ImageView playImg;
@@ -66,12 +68,9 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
     private TextView listTitle;
     @ViewInject(R.id.layout_coordinator)
     private CoordinatorLayout coordinator;
-    @ViewInject(R.id.collapsing_toolbar_music_list)
     private CollapsingToolbarLayout collapsingToolbar;
-//    @ViewInject(R.id.iv_collapsingImage)
     private ImageView collapsingImage;
-    @ViewInject(R.id.nested_scroll_view)
-    private NestedScrollView bottomPlayerController;
+    private ListView mListView;
     private TextView musicNameTx;
     private TextView commentCount;
     private TextView singerName;
@@ -96,7 +95,9 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
     private PlayerService mService;
 
     List<ListsInfo> ListsList;
-    int CurrentListPosition;
+    int ListPosition;
+    private List<MusicInfo> mList;
+    private MyAdapter mAdapter;
     ListsInfo currentList;
 
     // 定义ServiceConnection
@@ -127,6 +128,7 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
         Log.w(PlayerService.LOG_TAG, "Activity bindService");
         // updateUI();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -144,11 +146,36 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.list_activity);
         Intent intent = getIntent();
         ListsList = intent.getParcelableArrayListExtra("ListsList");
-        CurrentListPosition = intent.getIntExtra(Config.LIST, -1);
+        ListPosition = intent.getIntExtra(Config.LIST, -1);
+
         mContext = this;
         initView();
         initEvent();
+        initListData();
 //        PlayerBarToken=true;
+    }
+
+    private void initListData() {
+        Observable.just(ListPosition)
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<Integer, List<MusicInfo>>() {
+                    @Override
+                    public List<MusicInfo> call(Integer integer) {
+                        if (integer >= 0)
+                            return MusicInfoDao.getDAO().getMusicList(MusicListActivity.this, ListsList.get(integer).getListId());
+                        else
+                            return MusicInfoDao.getAllMusic(MusicListActivity.this);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<MusicInfo>>() {
+                    @Override
+                    public void call(List<MusicInfo> musicInfos) {
+                        mList = musicInfos;
+                        mAdapter = new MyAdapter(MusicListActivity.this, mList);
+                        mListView.setAdapter(mAdapter);
+                    }
+                });
     }
 
 
@@ -165,25 +192,27 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
         toolbar = (Toolbar) coordinator.findViewById(R.id.toolbar_list_fragment);
         listTitle = (TextView) coordinator.findViewById(R.id.tv_toolbar_title);
         playerBarLayout = (LinearLayout) findViewById(R.id.music_playerBarInApp);
+        mListView = (ListView) coordinator.findViewById(R.id.lv_music_list);
+        mListView.setOnItemClickListener(this);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         setSupportActionBar(toolbar);
 
 //        musicListLayout.setVisibility(View.VISIBLE);
         Log.w("TAG", "musicname-----------" + musicNameTx + "comment------------ " + commentCount);
-        if (CurrentListPosition > -1) {
+        /*if (ListPosition > -1) {
             List_Fragment fragment = new List_Fragment();
 
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_list_fragment
                     , fragment).commit();
             Bundle bundle = new Bundle();
-            if (CurrentListPosition >= 0) {
-                String name = ListsList.get(CurrentListPosition).getListName();
+            if (ListPosition >= 0) {
+                String name = ListsList.get(ListPosition).getListName();
                 listTitle.setText(name);
             }
             bundle.putParcelableArrayList("ListsList", (ArrayList<? extends Parcelable>) ListsList);
-            bundle.putInt(Config.LIST, CurrentListPosition);
+            bundle.putInt(Config.LIST, ListPosition);
             fragment.setArguments(bundle);
         } else {
             SystemListFragment fragment = new SystemListFragment();
@@ -192,13 +221,13 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
             fragmentManager.beginTransaction().replace(R.id.frame_list_fragment
                     , fragment).commit();
             Bundle bundle = new Bundle();
-            if (CurrentListPosition >= 0) {
-                String name = ListsList.get(CurrentListPosition).getListName();
+            if (ListPosition >= 0) {
+                String name = ListsList.get(ListPosition).getListName();
                 listTitle.setText(name);
             }
             bundle.putParcelableArrayList("ListsList", (ArrayList<? extends Parcelable>) ListsList);
             fragment.setArguments(bundle);
-        }
+        }*/
     }
 
     private void initEvent() {
@@ -298,7 +327,7 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    public void update(Observable observable, Object data) {
+    public void update(java.util.Observable observable, Object data) {
         updateUI();
     }
 
@@ -326,15 +355,15 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (CurrentListPosition < 0) {
+                if (ListPosition < 0) {
                     //从SQLite数据库中删除该音乐
                     int id = music.get_id();
                     ListsInfoDao.getDAO().deleteMusic(mContext, id);
                     bottomSheetDialog.dismiss();
                 }
-                if (CurrentListPosition >= 0) {
+                if (ListPosition >= 0) {
                     //仅从该表中移除
-                    int id = ListsList.get(CurrentListPosition).getListId();
+                    int id = ListsList.get(ListPosition).getListId();
                     int musicid = music.get_id();
                     ListsInfoDao.getDAO().removeMusic(mContext, musicid, id);
                     bottomSheetDialog.dismiss();
@@ -355,5 +384,16 @@ public class MusicListActivity extends BaseActivity implements View.OnClickListe
     }
 
 
-
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        if (!Service.isMyServiceRunning(view.getContext(), PlayerService.class)) {
+            Intent serviceintent = new Intent(view.getContext(), PlayerService.class);
+            view.getContext().startService(serviceintent);
+            Log.e("TAGS", "MediaPlayerService does not existed");
+        }
+        mService.setPlayerList((ArrayList<MusicInfo>) mList);
+        mService.play(mList.get(position));
+        mAdapter.setIsPlaying(position);
+        mAdapter.notifyDataSetChanged();
+    }
 }
